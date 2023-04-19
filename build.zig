@@ -14,7 +14,7 @@ pub fn build(b: *std.Build) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do not
     // set a preferred release mode, allowing the user to decide how to optimize.
 
-    const exe = b.addExecutable(.{
+    const exe = b.addSharedLibrary(.{
         .name = "autoclickerlib",
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.

@@ -73,16 +73,6 @@ const INPUT = extern struct {
     },
 };
 
-fn start_dispatching_messages() void {
-    mhook = SetWindowsHookExW(14, mouse_callback, null, 0);
-    khook = SetWindowsHookExW(13, keyboard_callback, null, 0);
-    var msg: *user32.MSG = undefined;
-    while (user32.GetMessageW(msg, null, 0, 0) == 1) {
-        _ = user32.TranslateMessage(msg);
-        _ = user32.DispatchMessageW(msg);
-    }
-}
-
 fn send_mouse_input(flags: u32) void {
     var input = INPUT{ .type = 0, .DUMMYUNIONNAME = .{ .mi = MOUSEINPUT{ .dwFlags = flags } } };
     _ = SendInput(1, &input, @sizeOf(INPUT));
@@ -167,14 +157,18 @@ fn start_right_clicker() void {
     clicker(1).start_clicker_thread();
 }
 
-fn start_clicker() void {
+export fn start_clicker() void {
     _ = thread.spawn(.{}, start_left_clicker, .{}) catch
         return;
     _ = thread.spawn(.{}, start_right_clicker, .{}) catch
         return;
-    start_dispatching_messages();
-}
 
-pub fn main() void {
-    start_clicker();
+    mhook = SetWindowsHookExW(14, mouse_callback, null, 0);
+    khook = SetWindowsHookExW(13, keyboard_callback, null, 0);
+
+    var msg: *user32.MSG = undefined;
+    while (user32.GetMessageW(msg, null, 0, 0) == 1) {
+        _ = user32.TranslateMessage(msg);
+        _ = user32.DispatchMessageW(msg);
+    }
 }
