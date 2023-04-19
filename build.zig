@@ -15,15 +15,13 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
 
     const exe = b.addExecutable(.{
-        .name = "client",
+        .name = "autoclickerlib",
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
         .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = .ReleaseFast,
     });
-
-    exe.linkSystemLibrary("user32");
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
